@@ -27,3 +27,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+15_1 = FILTER u BY $4 == 'blue' AND $1 MATCHES '.*Z.*';
+15_f = FOREACH 15_1 GENERATE CONCAT($1,'\t',$4);
+DUMP 15_f;
+
+STORE 15_f INTO 'output';
