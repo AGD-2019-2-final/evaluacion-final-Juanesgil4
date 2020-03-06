@@ -27,4 +27,4 @@ if __name__ == '__main__':
             curkey = key
             val_max = val
             val_min = val
-    sys.stdout.write("{}\t{}\t{}\n".format(curkey, val_max,minimo_valor))
+    sys.stdout.write("{}\t{}\t{}\n".format(curkey, val_max,val_min))
