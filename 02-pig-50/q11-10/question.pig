@@ -38,3 +38,11 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+11_1 = FOREACH u GENERATE $2,UPPER($2),LOWER($2);
+11_2 = ORDER Resp1 BY $0;
+11_f = FOREACH Resp2 GENERATE CONCAT($0,',',$1,',',$2);
+DUMP 11_f;
+
+
+STORE 11_f INTO 'output';
