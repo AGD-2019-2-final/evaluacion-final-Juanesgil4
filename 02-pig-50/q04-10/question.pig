@@ -27,36 +27,23 @@ fs -rm -f -r output;
 -- 
 --  >>> Escriba su respuesta a partir de este punto <<<
 -- 
-fs -rm -f truck_event_text_partition.csv
+u = LOAD 'truck_event_text_partition.csv' USING PigStorage(',')
+    AS (driverId:INT,
+		truckId:INT,
+		eventTime:CHARARRAY,
+		eventType:CHARARRAY,
+		longitude:DOUBLE,
+		latitude:DOUBLE,
+		eventKey:CHARARRAY,
+		correlationId:CHARARRAY,
+		driverName:CHARARRAY,
+		routeId:BIGINTEGER,
+		routeName:CHARARRAY,
+		eventDate:CHARARRAY);
 
-fs -put -f truck_event_text_partition.csv .
+t4 = LIMIT u 10;
+t4_1 = ORDER t4 BY $0,$1,$2;
+final4 = FOREACH t4_1 GENERATE CONCAT((CHARARRAY)$0,',',(CHARARRAY)$1,',',$2);
 
-info= LOAD 'truck_event_text_partition.csv' USING PigStorage(',') AS (
-    driverid:INT,
-    truckid:INT,
-    eventtime:CHARARRAY,
-    eventtype:CHARARRAY, 
-    longitude: DOUBLE,
-    latitude: DOUBLE,
-    eventkey: CHARARRAY,
-    correlationid: CHARARRAY,
-    drivername: CHARARRAY,
-    routeid: BIGINTEGER,
-    routename: CHARARRAY,
-    eventdate: CHARARRAY
-);
 
-s = LIMIT info 10;
-
-col = FOREACH s GENERATE driverid, truckid, eventtime;
-
-orden = ORDER col BY driverid, truckid, eventtime;
-
-STORE orden INTO 'output' USING PigStorage(',');
-
-fs -get output .
-
-fs -rm truck_event_text_partition.csv
-
-fs -rm output/*
-fs -rmdir output
+STORE final4 INTO 'output';
