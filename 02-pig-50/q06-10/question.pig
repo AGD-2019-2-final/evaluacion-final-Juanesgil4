@@ -12,31 +12,20 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-fs -rm -f data.tsv
+fs -rm -f -r data.tsv
+fs -put data.tsv
 
-fs -put -f data.tsv .
+u = LOAD 'data.tsv' USING PigStorage('\t')
+    AS (col1:CHARARRAY,
+        col2:BAG{t: TUPLE(p:CHARARRAY)},
+        col3:MAP[]);
 
-info=LOAD 'data.tsv' USING PigStorage() AS (
-    f1:CHARARRAY,
-    f2:BAG{t: TUPLE()},
-    f3:MAP[]
-);
+t6 = FOREACH u GENERATE FLATTEN($2);
+t6_1 = FOREACH t6 GENERATE $0;
+t6_2 = GROUP t6_1 BY $0;
+final6 = FOREACH t6_2 GENERATE CONCAT($0,',',(CHARARRAY)COUNT($1));
+DUMP final6;
 
-col = FOREACH info GENERATE FLATTEN(f3) AS c1;
+STORE final6 INTO 'output';
 
-keys = FOREACH col GENERATE FLATTEN(c1) AS k;
-
-tok = FOREACH keys GENERATE FLATTEN(TOKENIZE(k)) AS f1;
-
-grouped = GROUP tok BY f1;
-
-lettercount = FOREACH grouped GENERATE group, COUNT(tok);
-
-STORE lettercount INTO 'output' USING PigStorage(',');
-
-fs -get output .
-
-fs -rm data.tsv
-
-fs -rm output/*
-fs -rmdir output
+fs -copyToLocal output output
