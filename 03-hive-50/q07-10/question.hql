@@ -40,4 +40,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+SELECT t0.c2, CONCAT_WS(':',COLLECT_SET(CAST(t0.c1 AS STRING))) 
+FROM (
+    SELECT c2, c1
+    FROM tbl0
+    ORDER BY c2, c1
+) t0 
+GROUP BY t0.c2;
