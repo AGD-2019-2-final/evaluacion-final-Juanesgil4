@@ -28,4 +28,28 @@
 fs -rm -f -r output;
 --
 
+fs -rm -f -r output;
+--
+fs -rm -f data.csv
 
+fs -put -f data.csv .
+
+charac = LOAD 'data.csv' USING PigStorage(',') AS (
+    f1:INT,
+    f2:CHARARRAY,
+    f3:CHARARRAY,
+    f4:DATETIME,
+    f5:CHARARRAY,
+    f6:INT
+);
+
+u = FOREACH charac GENERATE CONCAT(f2,'@',f3);
+
+STORE u INTO 'output';
+
+fs -get output .
+
+fs -rm data.csv
+
+fs -rm output/*
+fs -rmdir output
