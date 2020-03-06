@@ -2,13 +2,10 @@ import sys
 #
 #  >>> Escriba el codigo del mapper a partir de este punto <<<
 #
-if __name__=="__main__":
-	for line in sys.stdin:
-		charac=line.split("   ")[0]
-		date=line.split("   ")[1]
-		valor=line.split("   ")[2]
-
-		valor=int(valor)
-		valor=str(valor)
-		valor=valor.zfill(3)
-		sys.stdout.write("{}\t{}\t{}\t{}\n".format(valor,charac,date,int(valor)))
+for line in sys.stdin:
+    line = line.strip()
+    line = line.split(' ')
+    data1 = line[0]
+    data2 = line[3]
+    data3 = int(line[6])
+    sys.stdout.write("{},{},{}\n".format(data1,data2,data3))
