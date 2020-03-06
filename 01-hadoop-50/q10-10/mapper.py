@@ -4,8 +4,7 @@ import sys
 #
 
 if __name__ == "__main__":
-    for line in sys.stdin:
-      key = line.split('   ')[0]
-      val_col1 = line.split('   ')[1]
-      val_col2 = line.split('   ')[2].strip()
-      sys.stdout.write("{}\t{}\t{}\n".format(key,val_col1,val_col2))
+    for linea in sys.stdin:
+      key_col=linea.split('\t')[0]
+      val_col=linea.split('\t')[1].strip()
+      sys.stdout.write("{}\t{}\n".format(key_col,val_col))
