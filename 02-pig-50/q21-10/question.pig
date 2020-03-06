@@ -29,3 +29,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+21_1= FOREACH u GENERATE firstname, color AS color;
+21_f = FILTER 21_1 BY (color matches '.*(blue|green).*');
+STORE 21_f INTO 'output';
