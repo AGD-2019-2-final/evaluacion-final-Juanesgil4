@@ -12,22 +12,15 @@ fs -rm -f -r output;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-data = LOAD 'data.tsv' USING PigStorage('\t') 
-    AS (letra:CHARARRAY, 
-        lista_letras:BAG{t: tuple(a:CHARARRAY)},
-        clave_valor:MAP[]);
-DUMP data;
+u = LOAD 'data.tsv' USING PigStorage('\t')
+    AS (col1:CHARARRAY,
+        col2:BAG{t: TUPLE(p:CHARARRAY)},
+        col3:MAP[]);
 
-lista_letras = FOREACH data GENERATE lista_letras;
-DUMP lista_letras;
+t5 = FOREACH u GENERATE FLATTEN($1);
+t5_1 = GROUP t5 BY $0;
+final5 = FOREACH t5_1 GENERATE CONCAT($0,'\t',(CHARARRAY)COUNT($1));
+DUMP final5;
 
-charac = FOREACH lista_letras GENERATE FLATTEN(lista_letras) AS letra;
-DUMP charac;
 
-agrp = GROUP charac BY letra;
-DUMP agrp;
-
-letracount = FOREACH agrp GENERATE group, COUNT(charac);
-DUMP letracount;
-
-STORE letracount INTO 'output' using PigStorage('\t');
+STORE final5 INTO 'output';
