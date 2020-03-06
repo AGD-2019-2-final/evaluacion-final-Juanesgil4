@@ -12,25 +12,19 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-fs -rm -f data.tsv
+fs -rm -f -r data.tsv
+fs -put data.tsv
 
-fs -put -f data.tsv .
+u = LOAD 'data.tsv' USING PigStorage('\t')
+    AS (col1:CHARARRAY,
+        col2:BAG{t: TUPLE(p:CHARARRAY)},
+        col3:MAP[]);
 
-lines= LOAD 'data.tsv' USING PigStorage() AS (
-    f1:CHARARRAY,
-    f2:BAG{t: TUPLE()},
-    f3:MAP[]
-);
+t7 = FOREACH u GENERATE $0,SIZE($1),SIZE($2);
+t7_1 = ORDER t7 BY $0,$1,$2;
+final7 = FOREACH t7_1 GENERATE CONCAT($0,',',(CHARARRAY)$1,',',(CHARARRAY)$2);
+DUMP final7;
 
-u = FOREACH lines GENERATE f1, COUNT(f2) AS c1, SIZE(f3) AS c2;
+STORE final7 INTO 'output';
 
-ordenadas = ORDER u BY f1, c1, c2;
-
-STORE ordenadas INTO 'output' USING PigStorage(',');
-
-fs -get output .
-
-fs -rm data.tsv
-
-fs -rm output/*
-fs -rmdir output
+fs -copyToLocal output output
