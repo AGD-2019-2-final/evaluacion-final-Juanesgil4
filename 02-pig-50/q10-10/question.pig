@@ -26,3 +26,17 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+a = FOREACH u GENERATE surname, SIZE(surname) AS longitud;
+
+b = ORDER t BY longitud DESC, surname;
+
+l = LIMIT o 5;
+
+STORE l INTO 'output' USING PigStorage(',') ;
+
+fs -get output .
+
+fs -rm data.csv
+
+fs -rm output/*
+fs -rmdir output
