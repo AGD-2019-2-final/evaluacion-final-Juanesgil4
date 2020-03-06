@@ -23,12 +23,11 @@ u = LOAD 'data.tsv' USING PigStorage('\t')
         col3:MAP[]);
 
 
-Resp8 = FOREACH u GENERATE FLATTEN($1), FLATTEN(KEYSET($2));
-Resp81 = GROUP Resp8 BY ($0,$1);
-Resp = FOREACH Resp81 GENERATE group,COUNT(Resp8);
-DUMP Resp
+t8 = FOREACH u GENERATE FLATTEN($1), FLATTEN(KEYSET($2));
+t8_1 = GROUP t8 BY ($0,$1);
+final8 = FOREACH t8_1 GENERATE group,COUNT(t8);
+DUMP final8
 
-
-STORE Resp INTO 'output';
+STORE final8 INTO 'output';
 
 fs -copyToLocal output output
