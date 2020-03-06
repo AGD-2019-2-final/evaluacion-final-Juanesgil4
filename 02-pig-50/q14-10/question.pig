@@ -27,3 +27,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+14_1 = FILTER u BY NOT ($4) MATCHES '.*b.*';
+14_f = FOREACH 14_1 GENERATE $4;
+DUMP 14_f;
+
+STORE 14_f INTO 'output';
