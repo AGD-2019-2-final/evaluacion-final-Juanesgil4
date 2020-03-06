@@ -35,7 +35,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 
 12_1 = FILTER u BY LOWER(SUBSTRING($2,0,1)) IN ('d','e','f','g','h','i','j','k');
-12_f = FOREACH Resp1 GENERATE $2;--CONCAT($0,',',$1,',',$2);
+12_f = FOREACH 12_1 GENERATE $2;--CONCAT($0,',',$1,',',$2);
 DUMP 12_f;
 
 
