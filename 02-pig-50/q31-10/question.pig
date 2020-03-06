@@ -20,3 +20,10 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+ordenado = ORDER u BY valor ASC;
+val = FOREACH ordenado GENERATE valor;
+limite = LIMIT val 5; 
+DUMP limite;
+STORE limite INTO 'output';
+fs -get output/ .
