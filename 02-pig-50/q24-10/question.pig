@@ -26,7 +26,17 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-24_f = FOREACH u GENERATE REGEX_EXTRACT(birthday, '.*-([0-9]{2})-.*', 1) ;
-DUMP 24_f;
-STORE 24_f INTO 'output' USING PigStorage(',');
-fs -copyToLocal output output;
+tabla = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+
+
+final24 = FOREACH tabla GENERATE REGEX_EXTRACT($3, '(\\d{4})-(\\d{2})-(\\d{2})', 2);
+DUMP final24;
+
+
+STORE final24 INTO 'output' USING PigStorage(',');
