@@ -27,9 +27,17 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-25_f = FOREACH u GENERATE INDEXOF(firstname,'a',1);
-DUMP 25_f;
+tabla = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
 
-STORE 25_f INTO 'output' USING PigStorage(',');
 
-fs -copyToLocal output output;
+final25 = FOREACH tabla GENERATE INDEXOF($1, 'a', 1);
+DUMP final25;
+
+
+STORE final25 INTO 'output' USING PigStorage(',');
