@@ -28,8 +28,8 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-15_1 = FILTER u BY $4 == 'blue' AND $1 MATCHES '.*Z.*';
-15_f = FOREACH 15_1 GENERATE CONCAT($1,'\t',$4);
-DUMP 15_f;
+t15 = FOREACH u GENERATE firstname, color;
+final15 = FILTER t15 BY ($1 == 'blue') AND STARTSWITH($0,'Z');
+STORE final15 INTO 'output';
 
 STORE 15_f INTO 'output';
