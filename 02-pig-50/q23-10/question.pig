@@ -29,6 +29,18 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-23_1= FOREACH u GENERATE firstname, color AS color;
-23_f = FILTER 23_1 BY (color matches '.*[aeiou]$*');
-STORE 23_f INTO 'output' USING PigStorage (',');
+tabla = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+
+
+t23 = FILTER tabla BY $4 MATCHES '.*[aeiou]';
+final23 = FOREACH t23 GENERATE $1,$4;
+DUMP final23;
+
+
+STORE final23 INTO 'output' USING PigStorage(',');
