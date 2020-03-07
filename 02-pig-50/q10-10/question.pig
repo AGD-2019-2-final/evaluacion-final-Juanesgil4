@@ -14,29 +14,19 @@
 -- 
 -- Escriba el resultado a la carpeta `output` del directorio actual.
 -- 
-fs -rm -f -r output;
---
-u = LOAD 'data.csv' USING PigStorage(',') 
-    AS (id:int, 
-        firstname:CHARARRAY, 
-        surname:CHARARRAY, 
-        birthday:CHARARRAY, 
-        color:CHARARRAY, 
-        quantity:INT);
---
--- >>> Escriba su respuesta a partir de este punto <<<
---
-a = FOREACH u GENERATE surname, SIZE(surname) AS longitud;
+fs -rm -f -r data.tsv
+fs -put data.tsv
 
-b = ORDER t BY longitud DESC, surname;
+u = LOAD 'data.tsv' USING PigStorage('\t')
+    AS (col1:CHARARRAY,
+        col2:BAG{t: TUPLE(p:CHARARRAY)},
+        col3:MAP[]);
 
-l = LIMIT o 5;
+t10 = FOREACH u GENERATE FLATTEN($1);
+t10_1 = GROUP t10 BY $0;
+final10 = FOREACH t10_1 GENERATE CONCAT($0,'\t',(CHARARRAY)COUNT($1));
+DUMP final10;
 
-STORE l INTO 'output' USING PigStorage(',') ;
+STORE final10 INTO 'output';
 
-fs -get output .
-
-fs -rm data.csv
-
-fs -rm output/*
-fs -rmdir output
+fs -copyToLocal output output
