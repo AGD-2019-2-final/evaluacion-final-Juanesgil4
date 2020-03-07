@@ -31,5 +31,3 @@ u = LOAD 'data.csv' USING PigStorage(',')
 t15 = FOREACH u GENERATE firstname, color;
 final15 = FILTER t15 BY ($1 == 'blue') AND STARTSWITH($0,'Z');
 STORE final15 INTO 'output';
-
-STORE 15_f INTO 'output';
