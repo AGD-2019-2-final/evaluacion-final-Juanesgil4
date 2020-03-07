@@ -29,8 +29,19 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-22_1= FOREACH u GENERATE firstname, color AS color;
-22_f = FILTER 22_1 BY (color matches '.*n$*');
+tabla = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
 
-STORE 22_f INTO 'output' USING PigStorage (',');
+
+t22 = FILTER tabla BY $4 MATCHES '.*n';
+final22 = FOREACH t22 GENERATE $1,$4;
+DUMP final22;
+
+
+STORE final22 INTO 'output' USING PigStorage(',');
 
