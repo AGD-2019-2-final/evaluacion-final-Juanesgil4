@@ -35,6 +35,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 
 t12 = FOREACH u GENERATE $2, SUBSTRING($2,0,1) as ini;
-final12 = FILTER r BY ini >= 'D' and ini <= 'K';
+final12 = FILTER t12 BY ini >= 'D' and ini <= 'K';
 final12 = FOREACH final12 GENERATE $0;
 STORE final12 INTO 'output';
