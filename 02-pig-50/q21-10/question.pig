@@ -29,6 +29,18 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
-21_1= FOREACH u GENERATE firstname, color AS color;
-21_f = FILTER 21_1 BY (color matches '.*(blue|green).*');
-STORE 21_f INTO 'output';
+tabla = LOAD 'data.csv' USING PigStorage(',') 
+    AS (id:int, 
+        firstname:CHARARRAY, 
+        surname:CHARARRAY, 
+        birthday:CHARARRAY, 
+        color:CHARARRAY, 
+        quantity:INT);
+
+
+t21 = FILTER tabla BY $4 MATCHES 'blue|green';
+final21 = FOREACH t21 GENERATE $1,$4;
+DUMP final21;
+
+
+STORE final21 INTO 'output' USING PigStorage('\t');
